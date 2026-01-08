@@ -34,11 +34,15 @@ User signup & login
 JWT-based authentication
 
 Each user has isolated expense data
-<img width="1919" height="926" alt="Screenshot 2026-01-06 104704" src="https://github.com/user-attachments/assets/4ff9e72f-276f-42d3-833c-2f7e1e6cac6e" />
+<img width="1919" height="926" alt="Screenshot 2026-01-06 104704" src="https://github.com/user-attachments/assets/01b1b403-8bed-4947-8853-5a7ade9e4b9d" />
 
-<img width="1904" height="976" alt="Screenshot 2026-01-06 111254" src="https://github.com/user-attachments/assets/baabc2c9-399c-40ac-9990-8d509524feca" />
 
-<img width="400" height="864" alt="Screenshot 2026-01-06 111305" src="https://github.com/user-attachments/assets/be0bb2a7-0e22-470f-8006-29ef0ef51b05" />     <img width="390" height="870" alt="Screenshot 2026-01-06 111842" src="https://github.com/user-attachments/assets/9ed27aad-f493-418b-9059-e4bc5ee75750" />
+<img width="1904" height="976" alt="Screenshot 2026-01-06 111254" src="https://github.com/user-attachments/assets/dc654325-5e05-4a0e-977f-5dab84289173" />
+
+
+
+<img width="400" height="864" alt="Screenshot 2026-01-06 111305" src="https://github.com/user-attachments/assets/ab22c3ae-7283-4adb-981a-a112b2352783" /><img width="390" height="870" alt="Screenshot 2026-01-06 111842" src="https://github.com/user-attachments/assets/6189dcd3-51b3-4937-a181-154bdf169c6f" />
+
 
 
 
@@ -73,7 +77,8 @@ Html,Css,Js
 📂 Project Structure
 SPENDLYAI/
 
-<img width="735" height="759" alt="Screenshot 2026-01-06 112055" src="https://github.com/user-attachments/assets/b467857a-c5d0-496d-84c3-2adb69636a8e" />
+<img width="735" height="759" alt="Screenshot 2026-01-06 112055" src="https://github.com/user-attachments/assets/79966315-e7e2-4112-86f1-388f8c0107ad" />
+
 
 
 🧠 AI Intelligence Flow
