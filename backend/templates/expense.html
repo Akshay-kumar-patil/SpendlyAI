@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Expense</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="page-dashboard">
+
+<div class="expense-box">
+
+    <!-- Cross Button -->
+    <a href="{{ url_for('dashboard') }}" class="close-btn">✕</a>
+
+    <h1 class="expense-heading">Add New Expense</h1>
+
+    <form method="POST" action="" class="expense-form">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            <label>Amount</label>
+            {{ form.amount(class="input-field", placeholder="Enter amount") }}
+        </div>
+
+        <div class="form-group">
+            <label>Date</label>
+            {{ form.date(class="input-field") }}
+        </div>
+
+        <div class="form-group">
+            <label>Category</label>
+            {{ form.expense_type(class="input-field", placeholder="Food, Travel...") }}
+        </div>
+
+        <button type="submit" class="btn-save">Save</button>
+    </form>
+
+</div>
+
+</body>
+</html>

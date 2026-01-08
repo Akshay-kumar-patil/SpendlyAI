@@ -1,0 +1,1010 @@
+/* ==== GLOBAL ==== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg1: #0f172a;
+  --bg2: #020617;
+  --accent: #38bdf8;
+  --accent-soft: rgba(56, 189, 248, 0.3);
+  --card-bg: rgba(15, 23, 42, 0.55);
+  --border-glass: rgba(148, 163, 184, 0.4);
+  --text-main: #e5e7eb;
+  --text-muted: #94a3b8;
+  --danger: #f97373;
+  --success: #4ade80;
+  --purple: #a855f7;
+  --yellow: #f59e0b;
+}
+
+/* animated background */
+body {
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  color: var(--text-main);
+  background: radial-gradient(circle at 0% 0%, #22d3ee 0, transparent 40%),
+              radial-gradient(circle at 100% 0%, #6366f1 0, transparent 40%),
+              radial-gradient(circle at 0% 100%, #22c55e 0, transparent 40%),
+              linear-gradient(135deg, var(--bg1), var(--bg2));
+  background-size: 240% 240%;
+  animation: moveGradient 18s ease infinite;
+}
+
+body.page-dashboard {
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+@keyframes moveGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+
+/* ============================================================
+   FIXED HEADER
+============================================================ */
+.fixed-header {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 100%;
+  padding: 0 20px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  z-index: 999;
+}
+
+.greeting-box {
+  display: flex;
+  flex-direction: column;
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.greeting-box span {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.greeting-box h2 {
+  font-size: 1.6rem;
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.logout-link {
+  color: #e5e7eb;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 6px 14px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  animation: slideInRight 0.6s ease-out;
+}
+
+
+/* prevent overlap */
+.dashboard-main {
+  margin-top: 90px !important;
+  padding: 0.6rem 1.4rem 5.2rem;
+}
+
+
+/* ============================================================
+   DASHBOARD COMPONENTS
+============================================================ */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.9rem;
+}
+
+.stat-card {
+  border-radius: 18px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-glass);
+  padding: 0.9rem 1rem;
+  backdrop-filter: blur(12px);
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.stat-value {
+  margin-top: 0.2rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.expenses-card {
+  margin-top: 1.4rem;
+  border-radius: 18px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(30,64,175,0.7);
+  padding: 1rem;
+  backdrop-filter: blur(18px);
+}
+
+.expenses-list {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.expenses-list td,
+.expenses-list th {
+  padding: 0.4rem 0.2rem;
+  border-bottom: 1px solid rgba(30, 64, 175, 0.4);
+}
+
+
+/* ============================================================
+   FLOATING ACTION BUTTON + OPTIONS
+============================================================ */
+
+.fab-wrapper {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* FAB main button */
+.fab-main {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 0 0, #38bdf8, transparent 50%),
+                radial-gradient(circle at 100% 100%, #a855f7, transparent 60%),
+                rgba(15, 23, 42, 0.9);
+    border: 1px solid var(--border-glass);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+    box-shadow: 0 18px 38px rgba(0,0,0,0.8);
+    backdrop-filter: blur(16px);
+    transition: 0.25s ease;
+}
+
+/* Fix Hover — NO translateX */
+.fab-main:hover {
+    transform: scale(1.08);
+}
+
+/* Active (clicked) effect */
+.fab-main.active {
+    transform: scale(0.88);
+    filter: blur(1px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.6);
+}
+
+
+
+/* POP-OUT OPTIONS */
+.fab-options {
+  position: absolute;
+  bottom: 95px;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  opacity: 0;
+
+  display: flex;
+  gap: 1.1rem;
+
+  pointer-events: none;
+  transition: 0.3s ease;
+}
+
+.fab-options.show {
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.fab-option {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  background: rgba(15,23,42,0.95);
+  border: 1px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  transition: 0.25s ease;
+}
+
+.fab-option:hover {
+  transform: translateY(-6px) scale(1.06);
+}
+
+.fab-option .icon {
+  font-size: 1.3rem;
+}
+
+.fab-option .label {
+  margin-top: 2px;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 768px) {
+  .greeting-box h2 { font-size: 1.3rem; }
+  .dashboard-main { margin-top: 80px !important; }
+}
+
+@media (max-width: 480px) {
+  .greeting-box h2 { font-size: 1.1rem; }
+  .dashboard-main { margin-top: 75px !important; }
+}
+
+/* ===============================
+   FAB SCREEN DIM / BLUR OVERLAY
+================================ */
+.fab-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 80;
+    transition: opacity 0.25s ease;
+}
+
+.fab-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* FAB shrink when active */
+.fab-main.active {
+    transform: scale(0.88);
+    filter: blur(1px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.6);
+}
+
+/* FAB pop options */
+.fab-options {
+    position: absolute;
+    bottom: 95px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.7);
+    display: flex;
+    gap: 20px;
+    opacity: 0;
+    transition: 0.25s ease;
+    z-index: 9999;
+}
+
+.fab-options.show {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+}
+/* ========= EXPENSE PAGE STYLING ========= */
+
+.expense-container {
+    width: 90%;
+    max-width: 900px;
+    margin: 110px auto;
+    padding: 20px;
+    color: white;
+    position: relative;
+}
+
+/* Close (X) Button */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 1.8rem;
+    color: var(--text-main);
+    text-decoration: none;
+    padding: 5px 12px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    transition: 0.3s ease;
+}
+
+.close-btn:hover {
+    transform: scale(1.1);
+    background: rgba(255,255,255,0.18);
+}
+
+.expense-title {
+    font-size: 2.4rem;
+    margin-bottom: 25px;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.expense-form {
+    margin-top: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap; /* important for mobile responsiveness */
+}
+
+.form-field {
+    flex: 1;
+    min-width: 250px; /* forces stacking on small screens */
+}
+
+.input-field {
+    width: 100%;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border-glass);
+    background: rgba(255, 255, 255, 0.15);
+    font-size: 1rem;
+    color: white;
+    outline: none;
+}
+
+.input-field:focus {
+    border-color: var(--accent);
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.btn-save {
+    margin-top: 25px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    color: white;
+    cursor: pointer;
+    background: linear-gradient(135deg, #38bdf8, #6366f1);
+    transition: 0.3s ease;
+}
+
+.btn-save:hover {
+    filter: brightness(1.15);
+    transform: translateY(-2px);
+}
+
+/* ========= RESPONSIVE MOBILE ========= */
+
+@media (max-width: 600px) {
+
+    .expense-title {
+        font-size: 1.8rem;
+    }
+
+    .close-btn {
+        font-size: 1.4rem;
+        padding: 4px 10px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .form-field {
+        width: 100%;
+    }
+
+    .btn-save {
+        width: 100%;
+        font-size: 1.1rem;
+    }
+}
+/* EXPENSE PAGE CARD */
+.expense-box {
+    width: 95%;
+    max-width: 550px;
+    margin: 140px auto;
+    padding: 28px;
+    background: rgba(15, 23, 42, 0.55);
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.19);
+    backdrop-filter: blur(18px);
+    position: relative;
+    animation: fadeIn 0.6s ease-out;
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.35);
+}
+
+/* smooth entrance */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-15px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* CROSS BUTTON */
+.close-btn {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-size: 1.4rem;
+    color: #fff;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 5px 11px;
+    border-radius: 10px;
+    backdrop-filter: blur(14px);
+    transition: 0.25s ease;
+}
+.close-btn:hover {
+    transform: scale(1.15);
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* HEADING */
+.expense-heading {
+    text-align: center;
+    font-size: 1.9rem;
+    margin-bottom: 25px;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+/* FORM */
+.expense-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* LABEL + INPUT */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.form-group label {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+.input-field {
+    width: 100%;
+    padding: 13px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.13);
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.25s ease;
+}
+
+.input-field:focus {
+    border-color: var(--accent);
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 6px rgba(56, 189, 248, 0.5);
+}
+
+/* SAVE BUTTON */
+.btn-save {
+    padding: 14px;
+    width: 100%;
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #38bdf8, #6366f1);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.btn-save:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.15);
+}
+
+/* =========================================================
+   MOBILE VIEW — CENTERED + BIGGER + CLEAN UI
+=========================================================*/
+/* ===============================
+   EXPENSE POPUP (Mobile App Look)
+================================= */
+
+.expense-box {
+    width: 90%;
+    max-width: 650px;          /* bigger box */
+    margin: 0 auto;
+    margin-top: 90px;
+
+    padding: 35px;
+    background: rgba(15, 23, 42, 0.55);
+    border-radius: 32px;
+    border: 1px solid rgba(255,255,255,0.18);
+    backdrop-filter: blur(22px);
+
+    position: relative;
+    animation: modalPop 0.35s ease-out;
+
+    box-shadow:
+        0 20px 45px rgba(0,0,0,0.45),
+        0 0 0 1px rgba(255,255,255,0.12);
+}
+
+/* Popup animation */
+@keyframes modalPop {
+    from { opacity: 0; transform: scale(0.90) translateY(20px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* X button */
+.close-btn {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+
+    font-size: 1.6rem;
+    color: white;
+    text-decoration: none;
+
+    background: rgba(255,255,255,0.12);
+    padding: 6px 13px;
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+
+    transition: 0.25s ease;
+}
+.close-btn:hover {
+    transform: scale(1.12);
+    background: rgba(255,255,255,0.2);
+}
+
+/* Heading */
+.expense-heading {
+    text-align: center;
+    font-size: 2.0rem;
+    font-weight: 600;
+    margin-bottom: 28px;
+
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+/* Inputs container */
+.expense-form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+/* Label + input */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+.input-field {
+    width: 100%;
+    padding: 14px;
+    border-radius: 16px;
+
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.16);
+    color: white;
+    font-size: 1.05rem;
+    outline: none;
+
+    transition: 0.25s ease;
+}
+
+.input-field:focus {
+    background: rgba(255,255,255,0.22);
+    border-color: var(--accent);
+    box-shadow: 0 0 8px rgba(56,189,248,0.4);
+}
+
+/* SAVE BUTTON */
+.btn-save {
+    padding: 15px;
+    width: 100%;
+    border: none;
+    border-radius: 18px;
+
+    background: linear-gradient(135deg, #38bdf8, #6366f1);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.btn-save:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.12);
+}
+
+/* ===============================
+   MOBILE — FULL POPUP LOOK
+================================= */
+
+@media (max-width: 600px) {
+
+    body.page-dashboard {
+        display: flex;
+        justify-content: center;
+        padding-top: 40px;
+    }
+
+    .expense-box {
+        width: 92%;
+        padding: 30px;
+        margin-top: 20px;
+
+        border-radius: 26px;
+    }
+
+    .expense-heading {
+        font-size: 1.7rem;
+    }
+
+    .close-btn {
+        font-size: 1.3rem;
+        padding: 5px 11px;
+    }
+
+    .input-field {
+        padding: 13px;
+        font-size: 1rem;
+    }
+
+    .btn-save {
+        padding: 13px;
+        font-size: 1.1rem;
+    }
+}
+/* GLOBAL FIX */
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 35px;
+    padding: 40px;
+}
+
+/* LEFT SIDE */
+.left-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.boy-wrapper {
+    position: relative;
+}
+
+.boy-img {
+    width: 220px;      /* SMALL SIZE FIXED */
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Floating icons */
+.floating-icons .icon {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-1 { top: 10px; left: -20px; }
+.icon-2 { top: 35px; right: -25px; }
+.icon-3 { bottom: -10px; right: 0; }
+
+/* Left text */
+.side-text {
+    text-align: center;
+    margin-top: 10px;
+    max-width: 250px;
+}
+.side-text h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    background: linear-gradient(135deg,#38bdf8,#a855f7);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+/* RIGHT SIDE GLASS LOGIN BOX */
+.login-glass {
+    width: 380px;
+    padding: 30px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 25px;
+    border: 1px solid rgba(255,255,255,0.25);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.login-glass h1 {
+    margin-bottom: 5px;
+}
+.subtitle {
+    color: #ccc;
+    margin-bottom: 20px;
+}
+
+/* GLASS INPUT BOX */
+.glass-field {
+    margin-bottom: 15px;
+}
+
+.input-with-icon {
+    position: relative;
+}
+.input-with-icon i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 12px 12px 36px;
+    background: rgba(255,255,255,0.14);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+}
+
+/* LOGIN BUTTON */
+.btn-login {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 14px;
+    background: linear-gradient(135deg,#38bdf8,#6366f1);
+    border: none;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .login-wrapper {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .login-glass {
+        width: 90%;
+    }
+
+    .boy-img {
+        width: 160px;
+    }
+}
+
+
+/* ---------- AUTH BACKGROUND ----------- */
+.auth-body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0A0F2C, #08101E, #05161A);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+/* MAIN WRAPPER */
+.register-wrapper {
+    width: 100%;
+    max-width: 1180px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 45px;
+    padding: 20px;
+}
+
+/* ---------- LEFT SIDE ART ---------- */
+.left-side {
+    color: white;
+    width: 50%;
+    text-align: center;
+}
+
+.boy-container {
+    position: relative;
+}
+
+.boy-img {
+    width: 230px;
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Floating glass circles */
+.circle {
+    position: absolute;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    backdrop-filter: blur(18px);
+    background: rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    animation: float 4s ease-in-out infinite;
+}
+
+.circle-1 { top: -10px; left: -20px; }
+.circle-2 { top: 40px; right: -25px; }
+.circle-3 { bottom: 10px; left: 0; }
+.circle-4 { bottom: -20px; right: 10px; }
+
+.left-text h2 {
+    margin-top: 20px;
+    font-size: 1.9rem;
+    background: linear-gradient(135deg, #38bdf8, #a855f7);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+/* ---------- GLASS FORM ---------- */
+.register-glass {
+    width: 420px;
+    padding: 35px;
+    background: rgba(255,255,255,0.09);
+    border-radius: 28px;
+    border: 1px solid rgba(255,255,255,0.18);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+}
+
+.logo-circle {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #38bdf8, #8b5cf6);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    color: white;
+    font-size: 1.7rem;
+}
+
+.glass-field {
+    margin-bottom: 15px;
+}
+
+.glass-field label {
+    font-size: 0.9rem;
+    color: #CBD5E1;
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon i {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: #bbb;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 12px 12px 38px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.btn-primary.full-btn {
+    width: 100%;
+    padding: 13px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #38bdf8, #6366f1);
+    color: white;
+    font-size: 1.05rem;
+    border: none;
+    cursor: pointer;
+}
+
+/* Floating animation */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* ---------- MOBILE RESPONSIVE ---------- */
+@media (max-width: 768px) {
+    .register-wrapper {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .register-glass {
+        width: 90%;
+    }
+
+    .boy-img {
+        width: 170px;
+    }
+}
+
+
+/* Countdown inside mic */
+#countdown {
+    position: absolute;
+    font-size: 3rem;
+    font-weight: 700;
+    color: white;
+}
+
+#micBtn {
+    position: relative;
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login | Expense Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+<div class="login-wrapper">
+
+    <!-- LEFT SIDE -->
+    <div class="left-side">
+
+        <div class="boy-wrapper">
+            <img src="{{ url_for('static', filename='images/boy.png') }}" class="boy-img">
+
+            <div class="floating-icons">
+                <div class="icon icon-1"><i class="fas fa-coins"></i></div>
+                <div class="icon icon-2"><i class="fas fa-chart-line"></i></div>
+                <div class="icon icon-3"><i class="fas fa-piggy-bank"></i></div>
+            </div>
+        </div>
+
+        <div class="side-text">
+            <h2>Track Every Penny</h2>
+            <p>Visualize your spending habits and save more.</p>
+        </div>
+
+    </div>
+
+    <!-- RIGHT SIDE LOGIN GLASS BOX -->
+    <div class="login-glass">
+
+        <h1>Welcome back 👋</h1>
+        <p class="subtitle">Log in to continue</p>
+
+        <form method="POST" action="{{ url_for('login') }}">
+            {{ form.hidden_tag() }}
+
+            <div class="glass-field">
+                <label>Email</label>
+                <div class="input-with-icon">
+                    <i class="fa fa-envelope"></i>
+                    {{ form.email(class="form-control", placeholder="you@example.com") }}
+                </div>
+            </div>
+
+            <div class="glass-field">
+                <label>Password</label>
+                <div class="input-with-icon">
+                    <i class="fa fa-lock"></i>
+                    {{ form.password(class="form-control", placeholder="••••••••") }}
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login">Log In</button>
+
+            <p class="signup-text">New user? <a href="{{ url_for('register') }}">Create an account</a></p>
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

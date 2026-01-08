@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register | Expense Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="auth-body">
+
+<div class="register-wrapper">
+
+    <!-- LEFT SIDE ILLUSTRATION -->
+    <div class="left-side">
+
+        <div class="boy-container">
+            <img src="{{ url_for('static', filename='images/boy2.png') }}" class="boy-img">
+
+            <div class="floating-icons">
+                <div class="circle circle-1"><i class="fas fa-wallet"></i></div>
+                <div class="circle circle-2"><i class="fas fa-chart-bar"></i></div>
+                <div class="circle circle-3"><i class="fas fa-shield-alt"></i></div>
+                <div class="circle circle-4"><i class="fas fa-bell"></i></div>
+            </div>
+        </div>
+
+        <div class="left-text">
+            <h2>Start Your Financial Journey</h2>
+            <p>Build smart habits with effortless tracking.</p>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE GLASS FORM -->
+    <div class="register-glass">
+
+        <div class="logo-header">
+            <div class="logo-circle"><i class="fas fa-user-plus"></i></div>
+            <h1>Create Account</h1>
+            <p class="subtitle">Join thousands of smart savers.</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('register') }}">
+            {{ form.hidden_tag() }}
+
+            <!-- NAME -->
+            <div class="glass-field">
+                <label>Name</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-user"></i>
+                    {{ form.name(class="form-control", placeholder="Your full name") }}
+                </div>
+            </div>
+
+            <!-- EMAIL -->
+            <div class="glass-field">
+                <label>Email</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-envelope"></i>
+                    {{ form.email(class="form-control", placeholder="you@example.com") }}
+                </div>
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="glass-field">
+                <label>Password</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-lock"></i>
+                    {{ form.password(class="form-control", placeholder="••••••••") }}
+                </div>
+            </div>
+
+            <!-- CONFIRM PASSWORD -->
+            <div class="glass-field">
+                <label>Confirm Password</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" class="form-control" name="confirm_password" placeholder="••••••••">
+                </div>
+            </div>
+
+            <!-- TERMS -->
+            <div class="checkbox-row">
+                <input type="checkbox" required>
+                <span>I agree to the Terms & Conditions</span>
+            </div>
+
+            <button type="submit" class="btn-primary full-btn">Create Account</button>
+
+            <p class="switch-text">
+                Already registered?
+                <a href="{{ url_for('login') }}">Login here</a>
+            </p>
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

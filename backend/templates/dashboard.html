@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard | Expense Tracker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<!-- UNDO POPUP (MINIMAL) -->
+<div id="undoPopup"
+     style="
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #020617;
+        color: white;
+        padding: 12px 18px;
+        border-radius: 12px;
+        display: none;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid rgba(255,255,255,0.15);
+        z-index: 9999;
+        font-size: 14px;
+     ">
+    Expense deleted
+    <span onclick="undoDelete()"
+          style="
+            color:#ef4444;
+            cursor:pointer;
+            font-weight:600;
+          ">
+        UNDO
+    </span>
+</div>
+
+
+<body class="page-dashboard">
+
+<header class="dashboard-header fixed-header">
+    <div class="dashboard-header-left greeting-box">
+        <span>Hello,</span>
+        <h2>{{ user.name }}</h2>
+    </div>
+
+    <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+</header>
+
+<main class="dashboard-main">
+    <section class="stats-grid">
+
+      <article class="stat-card">
+        <div class="stat-label">Total Spent</div>
+        <div class="stat-value">₹ {{ total_expense }}</div>
+      </article>
+
+    </section>
+
+    <section class="expenses-card">
+      <h3>Your Expenses</h3>
+      <table class="expenses-list">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for e in expenses %}
+          <tr id="row-{{ e._id }}">
+            <td>{{ e.expense_type }}</td>
+            <td>₹ {{ e.amount }}</td>
+            <td>{{ e.date }}</td>
+            <td style="text-align:center;">
+              <span
+                style="color:#ef4444; cursor:pointer; font-size:18px;"
+                onclick="deleteExpense('{{ e._id }}')">
+                🗑️
+              </span>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </section>
+</main>
+
+<!-- Floating Button -->
+<div id="fabOverlay" class="fab-overlay"></div>
+
+<div class="fab-wrapper">
+    
+    <div class="fab-options" id="fabOptions">
+
+        <a href="{{ url_for('add_expense') }}" class="fab-option">
+            <span class="icon">✍️</span>
+            <span class="label">Manual</span>
+        </a>
+
+        <a href="{{ url_for('voice_agent_page') }}" class="fab-option">
+            <span class="icon">🎤</span>
+            <span class="label">Voice</span>
+        </a>
+
+        <a href="{{ url_for('receipt_page') }}" class="fab-option">
+            <span class="icon">🧾</span>
+            <span class="label">Receipt</span>
+        </a>
+
+    </div>
+
+    <div class="fab-main" id="fabMain">＋</div>
+    <div class="fab-label">Add</div>
+</div>
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
+<!-- 🔥 ONLY REQUIRED DELETE LOGIC -->
+<script>
+let deleteTimer = null;
+let lastDeletedId = null;
+
+function deleteExpense(expenseId) {
+    lastDeletedId = expenseId;
+
+    // hide row instantly
+    document.getElementById("row-" + expenseId).style.display = "none";
+
+    // show undo popup
+    document.getElementById("undoPopup").style.display = "flex";
+
+    // temp delete
+    fetch(`/expense/temp-delete/${expenseId}`, { method: "POST" });
+
+    // after 5 sec -> permanent delete + refresh
+    deleteTimer = setTimeout(() => {
+        fetch(`/expense/permanent-delete/${expenseId}`, { method: "POST" })
+            .then(() => {
+                document.getElementById("undoPopup").style.display = "none";
+                location.reload();   // 🔥 AUTO REFRESH
+            });
+    }, 5000);
+}
+
+function undoDelete() {
+    if (!lastDeletedId) return;
+
+    clearTimeout(deleteTimer);
+
+    // show row back
+    document.getElementById("row-" + lastDeletedId).style.display = "";
+
+    // undo delete in DB
+    fetch(`/expense/undo-delete/${lastDeletedId}`, { method: "POST" });
+
+    document.getElementById("undoPopup").style.display = "none";
+    lastDeletedId = null;
+}
+</script>
+
+
+</body>
+</html>
