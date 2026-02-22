@@ -212,16 +212,19 @@ def voice_agent_page():
         return render_template("voice_agent.html")
     
         
-@app.route('/run-voice-agent', methods=['GET'])
+@app.route('/run-voice-agent', methods=['POST'])
 def run_voice_agent():
     
     try:
         r = sr.Recognizer()
         translator=Translator()
 
-        with sr.Microphone() as source:
-            print("Speak any thing is any Language...")
-            audio = r.listen(source)
+        audio_file = request.files['audio']
+        audio_path = "/tmp/voice.wav"
+        audio_file.save(audio_path)
+        
+        with sr.AudioFile(audio_path) as source:
+            audio = r.record(source)    
 
         try:
             text =r.recognize_google(audio)
@@ -399,6 +402,7 @@ def receipt_save():
         }
     )
     flash("Expense added successfully!", "success")
+    return jsonify({"status":"saved"})
 
 # delete any expense
 
