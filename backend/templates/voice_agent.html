@@ -111,26 +111,62 @@ const amountField = document.getElementById("amountField");
 const dateField = document.getElementById("dateField");
 const categoryField = document.getElementById("categoryField");
 
+let mediaRecorder;
+let audioChunks = [];
+let isRecording = false;
+
 micBtn.addEventListener("click", async () => {
-    micBtn.classList.add("active");
-    statusText.innerText = "Listening...";
 
-    const res = await fetch("/run-voice-agent");
-    const data = await res.json();
+    // START RECORDING
+    if (!isRecording) {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-    micBtn.classList.remove("active");
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
 
-    if (data.status === "success") {
-        resultBox.classList.add("visible");
-        statusText.innerText = "Review & Save";
+        mediaRecorder.ondataavailable = e => {
+            audioChunks.push(e.data);
+        };
 
-        spokenText.innerText = "You said: " + data.sentence;
-        amountField.value = data.amount;
-        dateField.value = data.date;
-        categoryField.value = data.category;
-    } else {
-        statusText.innerText = "Try again";
+        mediaRecorder.start();
+        isRecording = true;
+
+        micBtn.classList.add("active");
+        statusText.innerText = "Listening... Tap again to stop";
+
+        return;
     }
+
+    // STOP RECORDING
+    mediaRecorder.stop();
+    isRecording = false;
+    micBtn.classList.remove("active");
+    statusText.innerText = "Processing...";
+
+    mediaRecorder.onstop = async () => {
+        const blob = new Blob(audioChunks, { type: "audio/wav" });
+        const formData = new FormData();
+        formData.append("audio", blob, "voice.wav");
+
+        const res = await fetch("/run-voice-agent", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await res.json();
+
+        if (data.status === "success") {
+            resultBox.classList.add("visible");
+            statusText.innerText = "Review & Save";
+
+            spokenText.innerText = "You said: " + data.sentence;
+            amountField.value = data.amount;
+            dateField.value = data.date;
+            categoryField.value = data.category;
+        } else {
+            statusText.innerText = "Try again";
+        }
+    };
 });
 
 document.getElementById("saveBtn").addEventListener("click", async () => {
