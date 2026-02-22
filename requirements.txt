@@ -10,6 +10,6 @@ google-genai
 langchain-core
 langchain-google-genai
 SpeechRecognition
-googletrans==4.0.0-rc1
+deep-translator==1.11.4
 pytesseract
 opencv-python
