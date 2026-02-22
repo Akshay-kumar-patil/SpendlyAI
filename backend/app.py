@@ -27,7 +27,14 @@ import re
 
 
 # app =Flask(__name__)
-app = Flask(__name__, static_folder='static', template_folder='templates')
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, "templates"),
+    static_folder=os.path.join(BASE_DIR, "static")
+)
+
 load_dotenv()
 
 app.config['SECRET_KEY'] = 'mysecretkey123'
@@ -433,6 +440,6 @@ def permanent_delete_expense(expense_id):
     return jsonify({"status":"deleted"})
 
 
-if __name__=='__main__':
-    app.run(debug=True,port=5005)
+# if __name__=='__main__':
+#     app.run(debug=True,port=5005)
 
