@@ -12,9 +12,10 @@ from bson.objectid import ObjectId
 from pymongo import MongoClient
 # ... for voice agent libraries
 import speech_recognition as sr
-from googletrans import Translator
+from deep_translator import GoogleTranslator
 from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
+import ffmpeg
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 import os
@@ -217,18 +218,26 @@ def run_voice_agent():
     
     try:
         r = sr.Recognizer()
-        translator=Translator()
+        # translator=Translator()
 
         audio_file = request.files['audio']
-        audio_path = "/tmp/voice.wav"
+        audio_path = "/tmp/voice.webm"
         audio_file.save(audio_path)
         
         with sr.AudioFile(audio_path) as source:
-            audio = r.record(source)    
+            wav_path = "/tmp/voice_converted.wav"
+            ffmpeg.input(audio_path).output(wav_path).run(overwrite_output=True)
+            
+            with sr.AudioFile(wav_path) as source:   
 
         try:
             text =r.recognize_google(audio)
             print("You said:",text)
+
+            translated_text = GoogleTranslator(source='auto', target='en').translate(text)
+            print("Translated:", translated_text)
+            
+            text = translated_text
 
         except Exception as e:
             print("Speech recognition error:", e)
@@ -237,8 +246,8 @@ def run_voice_agent():
                 "message": "Could not understand audio"
             })
 
-        lang = translator.detect(text).lang
-        print("detected language: ", lang)
+        # lang = translator.detect(text).lang
+        # print("detected language: ", lang)
 
 
         # audio goes to ai agent
